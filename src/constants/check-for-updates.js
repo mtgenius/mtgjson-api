@@ -1,7 +1,7 @@
-const fetch = require('node-fetch');
 const cards = require('./cards');
+const fetch = require('./fetch');
 
-const version = null;
+let version = null;
 
 // Convert "1.0.0" to 1.0.0.
 const getVersionString = v => v.substring(1, v.length - 1);
@@ -38,6 +38,7 @@ const checkForUpdates = () => {
         fetch('https://mtgjson.com/json/AllSetsArray.json')
           .then(response2 => response2.json())
           .then(allSetsArray => {
+            console.log('Updates loaded.');
             allSetsArray.sort(sortAllSetsArray);
 
             // Empty the cards cache.

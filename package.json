@@ -7,9 +7,11 @@
   "main": "src/index.js",
   "repository": "https://github.com/mtgenius/mtgjson-api.git",
   "scripts": {
+    "dev": "set ACCESS_CONTROL_ALLOW_ORIGIN=*&& node ./src/index.js",
     "start": "node ./src/index.js"
   },
   "dependencies": {
+    "https-proxy-agent": "^2.2.1",
     "node-fetch": "^2.2.0"
   }
 }

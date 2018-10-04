@@ -18,11 +18,11 @@ const headers = {
 // Start the server.
 http.createServer((request, response) => {
   const query = url.parse(request.url).query;
-  if (/^q=/.test(query)) {
-    const q = query.substring(2);
+  if (/^q=./.test(query)) {
+    const q = query.substring(2).toLowerCase();
     const found = [];
     for (const card of cards) {
-      if (card.name.indexOf(q) !== -1) {
+      if (card.name.toLowerCase().indexOf(q) !== -1) {
         found.push(card);
         if (found.length === 5) {
           break;

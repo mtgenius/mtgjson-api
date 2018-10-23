@@ -9,14 +9,25 @@ const TWELVE_HOURS_MS = TWELVE_HOURS_S * 1000;
 // Check for set updates every 12 hours.
 setInterval(checkForUpdates, TWELVE_HOURS_MS);
 
+const ACCESS_CONTROL_ALLOW_ORIGINS = process.env.ACCESS_CONTROL_ALLOW_ORIGIN.trim().split(/\s+/);
+
 const headers = {
   'Access-Control-Allow-Methods': 'GET',
-  'Access-Control-Allow-Origin': process.env.ACCESS_CONTROL_ALLOW_ORIGIN,
-  'Content-Type': 'application/json; charset=utf-8'
+  'Content-Type': 'application/json; charset=utf-8',
+  'Vary': 'Origin'
 };
 
 // Start the server.
 http.createServer((request, response) => {
+
+  // Access Control Allow Origin
+  if (ACCESS_CONTROL_ALLOW_ORIGINS.indexOf(request.headers.origin) === -1) {
+    response.writeHead(403, headers);
+    response.write('/* Forbidden */');
+    response.end();
+    return;
+  }
+
   const query = url.parse(request.url).query;
   if (/^q=./.test(query)) {
     const q = query.substring(2).toLowerCase();
@@ -31,6 +42,7 @@ http.createServer((request, response) => {
     }
     response.writeHead(200, {
       ...headers,
+      'Access-Control-Allow-Origin': request.headers.origin,
       'Cache-Control': 'max-age=' + TWELVE_HOURS_S + ', public',
       'Expires': new Date(Date.now() + TWELVE_HOURS_MS).toUTCString()
     });
@@ -40,10 +52,11 @@ http.createServer((request, response) => {
   else {
     response.writeHead(404, {
       ...headers,
+      'Access-Control-Allow-Origin': request.headers.origin,
       'Cache-Control': 'max-age=' + TWELVE_HOURS_S + ', public',
       'Expires': new Date(Date.now() + TWELVE_HOURS_MS).toUTCString()
     });
-    response.write('/* 404 */');
+    response.write('/* Not Found */');
     response.end();
   }
 })

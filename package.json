@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "https-proxy-agent": "^2.2.2",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.6.0"
   }
 }
